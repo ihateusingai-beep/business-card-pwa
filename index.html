@@ -3,37 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0A0A0F">
+    <meta name="theme-color" content="#00FF88">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>個人名片 | Personal Card</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+HK:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+HK:wght@400;500;700&display=swap');
-
         :root {
-            --gold: #FFD700;
-            --pink: #FF69B4;
-            --cyan: #00FFFF;
-            --dark-bg: #0A0A0F;
-            --card-bg: #1A1A2E;
-            --surface: #16213E;
-            --text-primary: #FFFFFF;
-            --text-secondary: #B0B0B0;
+            --accent: #00FF88;
+            --accent-soft: rgba(0, 255, 136, 0.3);
+            --accent-glow: rgba(0, 255, 136, 0.6);
+            --bg: #FFFFFF;
+            --surface: #F5F5F5;
+            --text-primary: #111111;
+            --text-secondary: #666666;
+            --card-radius: 16px;
+            --btn-radius: 12px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Noto Sans HK', 'Orbitron', sans-serif;
-            background: linear-gradient(180deg, #0A0A0F 0%, #1A1A2E 50%, #0A0A0F 100%);
-            background-attachment: fixed;
+            background: var(--bg);
             min-height: 100vh;
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
@@ -45,65 +39,33 @@
             padding: 24px 16px;
         }
 
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
+        .hero-image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: block;
         }
 
-        .header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--gold);
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            letter-spacing: 4px;
-        }
-
-        .header .subtitle {
-            font-size: 14px;
-            color: var(--cyan);
-            margin-top: 4px;
-            letter-spacing: 2px;
-        }
-
-        /* Unicorn Emblem */
-        .emblem {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 24px;
-            background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,105,180,0.4) 50%, transparent 70%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .emblem span {
-            font-size: 56px;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        /* Card */
         .card {
-            background: var(--card-bg);
-            border-radius: 16px;
+            background: var(--bg);
+            border-radius: var(--card-radius);
             padding: 24px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--accent-soft);
+            box-shadow: 0 4px 24px rgba(0, 255, 136, 0.2);
+            animation: gundamGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes gundamGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); border-color: var(--accent-soft); }
+            50%      { box-shadow: 0 0 20px var(--accent-glow); border-color: rgba(0, 255, 136, 0.8); }
         }
 
         .card-name {
             font-size: 24px;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 4px;
         }
 
         .card-name-en {
@@ -114,8 +76,8 @@
         }
 
         .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
             margin: 16px 0;
         }
 
@@ -123,16 +85,14 @@
             display: flex;
             align-items: flex-start;
             padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
         }
 
-        .info-row:last-child {
-            border-bottom: none;
-        }
+        .info-row:last-child { border-bottom: none; }
 
         .info-icon {
             font-size: 20px;
-            width: 36px;
+            margin-right: 12px;
             flex-shrink: 0;
         }
 
@@ -145,29 +105,27 @@
         .info-value {
             font-size: 16px;
             word-break: break-all;
+            font-weight: 600;
         }
 
-        /* QR Code Section */
-        .qr-section {
-            text-align: center;
-        }
+        .qr-section { text-align: center; }
 
         .qr-title {
             font-size: 18px;
-            color: var(--cyan);
+            color: var(--accent);
             margin-bottom: 16px;
+            font-weight: 700;
         }
 
         .qr-container {
-            background: white;
+            background: var(--bg);
             padding: 16px;
             border-radius: 12px;
+            border: 2px solid rgba(0, 255, 136, 0.5);
             display: inline-block;
         }
 
-        #qrcode canvas {
-            border-radius: 8px;
-        }
+        .qr-container img { display: block; }
 
         .qr-label {
             font-size: 12px;
@@ -175,7 +133,8 @@
             margin-top: 8px;
         }
 
-        /* Buttons */
+        .qr-error { color: #c0392b; font-size: 14px; }
+
         .btn-group {
             display: flex;
             gap: 12px;
@@ -186,7 +145,7 @@
             flex: 1;
             padding: 14px 20px;
             border: none;
-            border-radius: 12px;
+            border-radius: var(--btn-radius);
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
@@ -194,46 +153,34 @@
             font-family: inherit;
         }
 
-        .btn-primary {
-            background: var(--gold);
-            color: var(--dark-bg);
-        }
-
+        .btn-primary  { background: var(--accent);    color: var(--bg); }
+        .btn-secondary{ background: var(--surface);  color: var(--text-primary); }
         .btn-primary:hover {
-            background: #ffed4a;
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 4px 16px rgba(0, 255, 136, 0.4);
         }
 
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--text-primary);
+        .lang-toggle {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: transparent;
+            border: 1px solid #222;
+            color: #222;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
         }
 
-        .btn-secondary:hover {
-            background: #1e2a4a;
-        }
+        .view-mode   { display: block; }
+        .view-mode.hidden { display: none; }
 
-        /* Edit Mode */
-        .edit-mode {
-            display: none;
-        }
+        .edit-mode   { display: none; }
+        .edit-mode.active { display: block; }
 
-        .edit-mode.active {
-            display: block;
-        }
-
-        .view-mode {
-            display: block;
-        }
-
-        .view-mode.hidden {
-            display: none;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
+        .form-group { margin-bottom: 16px; }
 
         .form-label {
             display: block;
@@ -246,7 +193,7 @@
             width: 100%;
             padding: 12px 16px;
             background: var(--surface);
-            border: 1px solid rgba(255,215,0,0.3);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             color: var(--text-primary);
             font-size: 16px;
@@ -255,364 +202,436 @@
 
         .form-input:focus {
             outline: none;
-            border-color: var(--gold);
+            border-color: var(--accent);
         }
 
-        /* Quote */
-        .quote {
-            text-align: center;
-            margin-top: 24px;
+        .edit-card-title {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .edit-card-subtitle {
+            color: var(--text-secondary);
             font-size: 14px;
-            color: var(--pink);
-            opacity: 0.8;
-            font-style: italic;
+            margin-bottom: 20px;
         }
 
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--gold);
-            color: var(--dark-bg);
+            background: var(--text-primary);
+            color: var(--bg);
             padding: 12px 24px;
             border-radius: 8px;
             font-weight: 700;
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 1000;
+            pointer-events: none;
         }
 
-        .toast.show {
-            opacity: 1;
-        }
+        .toast.show { opacity: 1; }
 
-        /* Lang Toggle */
-        .lang-toggle {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: transparent;
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-        }
+        .fade-in { animation: fadeIn 0.5s ease; }
 
-        .lang-toggle:hover {
-            background: rgba(0,255,255,0.1);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <button class="lang-toggle" onclick="toggleLang()">中文</button>
-    
+    <button class="lang-toggle" data-action="toggle-lang"></button>
+
     <div class="container">
-        <div class="header">
-            <h1>UNICORN</h1>
-            <div class="subtitle" id="header-subtitle">PERSONAL CARD</div>
-        </div>
+        <img class="hero-image"
+             src="https://images.steamusercontent.com/ugc/823441571255035839/79990D0E086D7E9F384BB513093965BFE086772C/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+             alt="">
 
-        <div class="emblem">
-            <span>🦄</span>
-        </div>
-
-        <!-- View Mode -->
         <div class="view-mode" id="viewMode">
             <div class="card fade-in">
-                <div class="card-name" id="displayName">程棨彥</div>
-                <div class="card-name-en" id="displayNameEn">Cheng Kai Yin</div>
+                <div class="card-name"    data-bind="name"></div>
+                <div class="card-name-en" data-bind="nameEn"></div>
                 <div class="divider"></div>
+
                 <div class="info-row">
                     <span class="info-icon">📱</span>
                     <div>
-                        <div class="info-label" id="labelPhone">電話</div>
-                        <div class="info-value" id="displayPhone">92187444</div>
+                        <div class="info-label" data-i18n="labelPhone"></div>
+                        <div class="info-value" data-bind="phone"></div>
                     </div>
                 </div>
                 <div class="info-row">
                     <span class="info-icon">✉️</span>
                     <div>
-                        <div class="info-label" id="labelEmail">電郵</div>
-                        <div class="info-value" id="displayEmail">kencheng1204@hotmail.com</div>
+                        <div class="info-label" data-i18n="labelEmail"></div>
+                        <div class="info-value" data-bind="email"></div>
                     </div>
                 </div>
                 <div class="info-row">
                     <span class="info-icon">🏫</span>
                     <div>
-                        <div class="info-label" id="labelSchool">學校</div>
-                        <div class="info-value" id="displaySchool">匡智張玉瓊晨輝學校</div>
+                        <div class="info-label" data-i18n="labelSchool"></div>
+                        <div class="info-value" data-bind="school"></div>
                     </div>
                 </div>
                 <div class="info-row">
                     <span class="info-icon">💼</span>
                     <div>
-                        <div class="info-label" id="labelPosition">職位</div>
-                        <div class="info-value" id="displayPosition">教師</div>
+                        <div class="info-label" data-i18n="labelPosition"></div>
+                        <div class="info-value" data-bind="position"></div>
                     </div>
                 </div>
             </div>
 
             <div class="card qr-section">
-                <div class="qr-title" id="qrTitle">掃描添加聯絡人</div>
+                <div class="qr-title" data-i18n="qrTitle"></div>
                 <div class="qr-container">
-                    <div id="qrcode"></div>
+                    <img id="qrImage" alt="QR Code">
                 </div>
-                <div class="qr-label" id="qrLabel">二維碼</div>
+                <div class="qr-label" data-i18n="qrLabel"></div>
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-secondary" onclick="showEdit()" id="btnEditView">編輯資料</button>
+                <button class="btn btn-secondary" data-action="download-vcard" data-i18n="btnDownload"></button>
+                <button class="btn btn-secondary" data-action="play-sound">🔊</button>
+                <button class="btn btn-secondary" data-action="switch-card"  data-i18n="btnSwitch"></button>
+                <button class="btn btn-secondary" data-action="show-edit"    data-i18n="btnEditView"></button>
             </div>
         </div>
 
-        <!-- Edit Mode -->
         <div class="edit-mode" id="editMode">
             <div class="card">
-                <h2 style="color: var(--gold); margin-bottom: 8px;" id="editTitle">編輯名片</h2>
-                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;" id="editSubtitle">更新您的聯絡資料</p>
+                <h2 class="edit-card-title"    data-i18n="editTitle"></h2>
+                <p  class="edit-card-subtitle" data-i18n="editSubtitle"></p>
 
                 <div class="form-group">
-                    <label class="form-label" id="labelName">姓名（中文）</label>
-                    <input type="text" class="form-input" id="inputName">
+                    <label class="form-label" data-i18n="labelName"></label>
+                    <input class="form-input" data-bind-input="name" type="text">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="labelNameEn">姓名（英文）</label>
-                    <input type="text" class="form-input" id="inputNameEn">
+                    <label class="form-label" data-i18n="labelNameEn"></label>
+                    <input class="form-input" data-bind-input="nameEn" type="text">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="labelPhoneEdit">電話</label>
-                    <input type="tel" class="form-input" id="inputPhone">
+                    <label class="form-label" data-i18n="labelPhoneEdit"></label>
+                    <input class="form-input" data-bind-input="phone" type="tel">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="labelEmailEdit">電郵</label>
-                    <input type="email" class="form-input" id="inputEmail">
+                    <label class="form-label" data-i18n="labelEmailEdit"></label>
+                    <input class="form-input" data-bind-input="email" type="email">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="labelSchoolEdit">學校（中文）</label>
-                    <input type="text" class="form-input" id="inputSchool">
+                    <label class="form-label" data-i18n="labelSchoolEdit"></label>
+                    <input class="form-input" data-bind-input="school" type="text">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="labelSchoolEnEdit">學校（英文）</label>
-                    <input type="text" class="form-input" id="inputSchoolEn">
+                    <label class="form-label" data-i18n="labelSchoolEnEdit"></label>
+                    <input class="form-input" data-bind-input="schoolEn" type="text">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="labelPositionEdit">職位（中文）</label>
-                    <input type="text" class="form-input" id="inputPosition">
+                    <label class="form-label" data-i18n="labelPositionEdit"></label>
+                    <input class="form-input" data-bind-input="position" type="text">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="labelPositionEnEdit">職位（英文）</label>
-                    <input type="text" class="form-input" id="inputPositionEn">
+                    <label class="form-label" data-i18n="labelPositionEnEdit"></label>
+                    <input class="form-input" data-bind-input="positionEn" type="text">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" id="labelWebsiteEdit">網站（可選）</label>
-                    <input type="url" class="form-input" id="inputWebsite">
+                    <label class="form-label" data-i18n="labelWebsiteEdit"></label>
+                    <input class="form-input" data-bind-input="website" type="url">
                 </div>
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="saveContact()" id="btnSave">儲存</button>
-                <button class="btn btn-secondary" onclick="cancelEdit()" id="btnCancel">取消</button>
+                <button class="btn btn-primary"   data-action="save"   data-i18n="btnSave"></button>
+                <button class="btn btn-secondary" data-action="cancel" data-i18n="btnCancel"></button>
             </div>
         </div>
-
-        <div class="quote" id="quote">「我會展示奇蹟俾你睇！」— 獨角獸高達</div>
     </div>
 
-    <div class="toast" id="toast">已儲存！</div>
+    <div class="toast" id="toast"></div>
 
     <script>
-        // Data
-        let contacts = {
-            name: '程棨彥',
-            nameEn: 'Cheng Kai Yin',
-            phone: '92187444',
-            email: 'kencheng1204@hotmail.com',
-            school: '匡智張玉瓊晨輝學校',
-            schoolEn: 'Hong chi Chang Yu King Chan Fai School',
-            position: '教師',
-            positionEn: 'Teacher',
-            website: ''
+    (() => {
+        'use strict';
+
+        // ─── Constants ────────────────────────────────────────────────────
+        const STORAGE_KEYS = {
+            cards:      'businessCard',
+            activeCard: 'currentCard',
         };
 
-        let isEnglish = false;
-        let isEditMode = false;
+        const DEFAULT_CARDS = {
+            school: {
+                name: '程棨彥',
+                nameEn: 'Cheng Kai Yin',
+                phone: '92187444',
+                email: 'kencheng1204@hotmail.com',
+                school: '匡智張玉瓊晨輝學校',
+                schoolEn: 'Hong chi Chang Yu King Chan Fai School',
+                position: '教師',
+                positionEn: 'Teacher',
+                website: '',
+            },
+            personal: {
+                name: '程棨彥',
+                nameEn: 'Cheng Kai Yin',
+                phone: '92187444',
+                email: 'kencheng1204@hotmail.com',
+                school: '', schoolEn: '',
+                position: '', positionEn: '',
+                website: '',
+            },
+        };
 
-        // Load from localStorage
-        function loadData() {
-            const saved = localStorage.getItem('businessCard');
-            if (saved) {
-                contacts = JSON.parse(saved);
+        const I18N = {
+            zh: {
+                toggleLang: 'EN',
+                labelPhone: '電話', labelEmail: '電郵',
+                labelSchool: '學校', labelPosition: '職位',
+                qrTitle: '掃描添加聯絡人', qrLabel: '二維碼',
+                btnDownload: '下載聯絡人', btnSwitch: '切換', btnEditView: '編輯資料',
+                editTitle: '編輯名片', editSubtitle: '更新您的聯絡資料',
+                labelName: '姓名（中文）', labelNameEn: '姓名（英文）',
+                labelPhoneEdit: '電話', labelEmailEdit: '電郵',
+                labelSchoolEdit: '學校（中文）', labelSchoolEnEdit: '學校（英文）',
+                labelPositionEdit: '職位（中文）', labelPositionEnEdit: '職位（英文）',
+                labelWebsiteEdit: '網站（可選）',
+                btnSave: '儲存', btnCancel: '取消',
+                toastSaved: '已儲存！', toastDownloaded: '已下載！',
+                toastSwitched: '已切換至', toastActivated: 'Psycho-Frame 共鳴！',
+                switchToSchool: '學校', switchToPersonal: '個人',
+            },
+            en: {
+                toggleLang: '中文',
+                labelPhone: 'Phone', labelEmail: 'Email',
+                labelSchool: 'School', labelPosition: 'Position',
+                qrTitle: 'Scan to Add Contact', qrLabel: 'QR Code',
+                btnDownload: 'Download Contact', btnSwitch: 'Switch', btnEditView: 'Edit',
+                editTitle: 'Edit Contact', editSubtitle: 'Update your contact info',
+                labelName: 'Name (Chinese)', labelNameEn: 'Name (English)',
+                labelPhoneEdit: 'Phone', labelEmailEdit: 'Email',
+                labelSchoolEdit: 'School (Chinese)', labelSchoolEnEdit: 'School (English)',
+                labelPositionEdit: 'Position (Chinese)', labelPositionEnEdit: 'Position (English)',
+                labelWebsiteEdit: 'Website (optional)',
+                btnSave: 'Save', btnCancel: 'Cancel',
+                toastSaved: 'Saved!', toastDownloaded: 'Downloaded!',
+                toastSwitched: 'Switched to ', toastActivated: 'NT-D ACTIVATED!',
+                switchToSchool: 'School', switchToPersonal: 'Personal',
+            },
+        };
+
+        // ─── State ────────────────────────────────────────────────────────
+        const state = {
+            cards: structuredClone(DEFAULT_CARDS),
+            activeCardId: 'school',
+            lang: 'zh',
+        };
+
+        const t = (key) => I18N[state.lang][key] ?? key;
+        const activeContact = () => state.cards[state.activeCardId];
+
+        // ─── Storage ──────────────────────────────────────────────────────
+        const storage = {
+            load() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEYS.cards);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (parsed && typeof parsed === 'object') {
+                            state.cards = { ...DEFAULT_CARDS, ...parsed };
+                        }
+                    }
+                    const saved = localStorage.getItem(STORAGE_KEYS.activeCard);
+                    if (saved && state.cards[saved]) state.activeCardId = saved;
+                } catch (err) {
+                    console.warn('Storage load failed; using defaults.', err);
+                }
+            },
+            save() {
+                try {
+                    localStorage.setItem(STORAGE_KEYS.cards, JSON.stringify(state.cards));
+                    localStorage.setItem(STORAGE_KEYS.activeCard, state.activeCardId);
+                } catch (err) {
+                    console.warn('Storage save failed.', err);
+                }
+            },
+        };
+
+        // ─── vCard builder (single source of truth) ───────────────────────
+        const buildVCard = (c) => {
+            const lines = [
+                'BEGIN:VCARD',
+                'VERSION:3.0',
+                `FN:${c.name}`,
+                `FN;CHARSET=UTF-8:${c.nameEn}`,
+                `TEL;TYPE=CELL:${c.phone}`,
+                `EMAIL:${c.email}`,
+            ];
+            if (c.school)   lines.push(`ORG:${c.school}`);
+            if (c.position) lines.push(`TITLE:${c.position}`);
+            if (c.website)  lines.push(`URL:${c.website}`);
+            lines.push('END:VCARD');
+            return lines.join('\n');
+        };
+
+        // ─── Domain actions ───────────────────────────────────────────────
+        const actions = {
+            'toggle-lang': () => {
+                state.lang = state.lang === 'zh' ? 'en' : 'zh';
+                render();
+            },
+            'switch-card': () => {
+                state.activeCardId = state.activeCardId === 'school' ? 'personal' : 'school';
+                storage.save();
+                render();
+                const label = state.activeCardId === 'school' ? t('switchToSchool') : t('switchToPersonal');
+                toast(t('toastSwitched') + (state.lang === 'en' ? ' ' : '') + label);
+            },
+            'show-edit': () => {
+                populateEditForm();
+                document.getElementById('viewMode').classList.add('hidden');
+                document.getElementById('editMode').classList.add('active');
+            },
+            'cancel': () => {
+                document.getElementById('viewMode').classList.remove('hidden');
+                document.getElementById('editMode').classList.remove('active');
+            },
+            'save': () => {
+                const c = activeContact();
+                document.querySelectorAll('[data-bind-input]').forEach((el) => {
+                    c[el.dataset.bindInput] = el.value;
+                });
+                storage.save();
+                document.getElementById('viewMode').classList.remove('hidden');
+                document.getElementById('editMode').classList.remove('active');
+                render();
+                toast(t('toastSaved'));
+            },
+            'download-vcard': () => {
+                const vcard = buildVCard(activeContact());
+                const blob = new Blob([vcard], { type: 'text/vcard' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${activeContact().name}.vcf`;
+                a.click();
+                URL.revokeObjectURL(url);
+                toast(t('toastDownloaded'));
+            },
+            'play-sound': () => playGundamSound(),
+        };
+
+        // ─── Audio: Gundam NT-D activation ────────────────────────────────
+        let audioCtx = null;
+        const getAudioCtx = () => {
+            if (!audioCtx) {
+                const Ctor = window.AudioContext || window.webkitAudioContext;
+                if (!Ctor) return null;
+                audioCtx = new Ctor();
             }
-        }
+            return audioCtx;
+        };
 
-        // Save to localStorage
-        function saveData() {
-            localStorage.setItem('businessCard', JSON.stringify(contacts));
-        }
+        const playTone = (ctx, { type, freqStart, freqEnd, gainStart, start, dur }) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = type;
+            const t0 = ctx.currentTime + start;
+            osc.frequency.setValueAtTime(freqStart, t0);
+            osc.frequency.exponentialRampToValueAtTime(freqEnd, t0 + dur);
+            gain.gain.setValueAtTime(gainStart, t0);
+            gain.gain.exponentialRampToValueAtTime(0.01, t0 + dur);
+            osc.start(t0);
+            osc.stop(t0 + dur);
+        };
 
-        // Generate vCard
-        function generateVCard() {
-            return `BEGIN:VCARD
-VERSION:3.0
-FN:${contacts.name}
-FN;CHARSET=UTF-8:${contacts.nameEn}
-N:${contacts.name};;;
-TEL;TYPE=CELL:${contacts.phone}
-EMAIL:${contacts.email}
-ORG:${contacts.school}
-TITLE:${contacts.position}
-${contacts.website ? 'URL:' + contacts.website : ''}
-END:VCARD`;
-        }
+        const playGundamSound = () => {
+            const ctx = getAudioCtx();
+            if (!ctx) return;
+            playTone(ctx, { type: 'sine',     freqStart: 200,  freqEnd: 800,  gainStart: 0.3, start: 0,   dur: 0.5 });
+            playTone(ctx, { type: 'triangle', freqStart: 400,  freqEnd: 1200, gainStart: 0.2, start: 0.3, dur: 0.5 });
+            toast(t('toastActivated'));
+        };
 
-        // Render QR Code
-        function renderQR() {
-            const container = document.getElementById('qrcode');
-            container.innerHTML = '';
-            QRCode.toCanvas(generateVCard(), {
-                width: 200,
-                margin: 0,
-                color: {
-                    dark: '#000000',
-                    light: '#ffffff'
-                }
-            }, function(err, canvas) {
-                if (!err) {
-                    container.appendChild(canvas);
-                }
+        // ─── QR ───────────────────────────────────────────────────────────
+        const renderQR = () => {
+            const img = document.getElementById('qrImage');
+            const vcard = buildVCard(activeContact());
+            img.style.display = '';
+            img.onerror = () => {
+                img.style.display = 'none';
+                img.insertAdjacentHTML('afterend', '<p class="qr-error">請稍後再試</p>');
+                img.onerror = null;
+            };
+            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(vcard)}`;
+        };
+
+        // ─── Toast ────────────────────────────────────────────────────────
+        let toastTimer = null;
+        const toast = (msg) => {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+        };
+
+        // ─── Render: single pass, no scattered mutations ──────────────────
+        const render = () => {
+            // i18n
+            document.querySelectorAll('[data-i18n]').forEach((el) => {
+                const key = el.dataset.i18n;
+                if (I18N[state.lang][key] !== undefined) el.textContent = I18N[state.lang][key];
             });
-        }
 
-        // Update UI
-        function updateUI() {
-            document.getElementById('displayName').textContent = contacts.name;
-            document.getElementById('displayNameEn').textContent = contacts.nameEn;
-            document.getElementById('displayPhone').textContent = contacts.phone;
-            document.getElementById('displayEmail').textContent = contacts.email;
-            document.getElementById('displaySchool').textContent = isEnglish ? contacts.schoolEn : contacts.school;
-            document.getElementById('displayPosition').textContent = isEnglish ? contacts.positionEn : contacts.position;
-            
-            // Labels
-            document.getElementById('labelPhone').textContent = isEnglish ? 'Phone' : '電話';
-            document.getElementById('labelEmail').textContent = isEnglish ? 'Email' : '電郵';
-            document.getElementById('labelSchool').textContent = isEnglish ? 'School' : '學校';
-            document.getElementById('labelPosition').textContent = isEnglish ? 'Position' : '職位';
-            
-            // QR
-            document.getElementById('qrTitle').textContent = isEnglish ? 'Scan to Add Contact' : '掃描添加聯絡人';
-            document.getElementById('qrLabel').textContent = isEnglish ? 'QR Code' : '二維碼';
-            
+            // data bindings
+            const c = activeContact();
+            const lang = state.lang;
+            document.querySelectorAll('[data-bind]').forEach((el) => {
+                const key = el.dataset.bind;
+                let value = c[key] ?? '';
+                // bilingual display for school / position
+                if (key === 'school' || key === 'position') {
+                    const en = c[`${key}En`];
+                    value = lang === 'en' && en ? en : value;
+                }
+                el.textContent = value;
+            });
+
             renderQR();
-        }
+        };
 
-        // Toggle Language
-        function toggleLang() {
-            isEnglish = !isEnglish;
-            const btn = document.querySelector('.lang-toggle');
-            btn.textContent = isEnglish ? 'EN' : '中文';
-            
-            document.getElementById('header-subtitle').textContent = isEnglish ? 'PERSONAL CARD' : '個人名片';
-            document.getElementById('quote').textContent = isEnglish 
-                ? '"I will show you a miracle!" - Unicorn Gundam'
-                : '「我會展示奇蹟俾你睇！」— 獨角獸高達';
-            
-            updateUI();
-        }
+        const populateEditForm = () => {
+            const c = activeContact();
+            document.querySelectorAll('[data-bind-input]').forEach((el) => {
+                el.value = c[el.dataset.bindInput] ?? '';
+            });
+        };
 
-        // Show Edit Mode
-        function showEdit() {
-            document.getElementById('viewMode').classList.add('hidden');
-            document.getElementById('editMode').classList.add('active');
-            
-            // Fill form
-            document.getElementById('inputName').value = contacts.name;
-            document.getElementById('inputNameEn').value = contacts.nameEn;
-            document.getElementById('inputPhone').value = contacts.phone;
-            document.getElementById('inputEmail').value = contacts.email;
-            document.getElementById('inputSchool').value = contacts.school;
-            document.getElementById('inputSchoolEn').value = contacts.schoolEn;
-            document.getElementById('inputPosition').value = contacts.position;
-            document.getElementById('inputPositionEn').value = contacts.positionEn;
-            document.getElementById('inputWebsite').value = contacts.website || '';
-            
-            updateEditLabels();
-        }
-
-        function updateEditLabels() {
-            document.getElementById('editTitle').textContent = isEnglish ? 'Edit Contact' : '編輯名片';
-            document.getElementById('editSubtitle').textContent = isEnglish ? 'Update your contact info' : '更新您的聯絡資料';
-            document.getElementById('labelName').textContent = isEnglish ? 'Name (Chinese)' : '姓名（中文）';
-            document.getElementById('labelNameEn').textContent = isEnglish ? 'Name (English)' : '姓名（英文）';
-            document.getElementById('labelPhoneEdit').textContent = isEnglish ? 'Phone' : '電話';
-            document.getElementById('labelEmailEdit').textContent = isEnglish ? 'Email' : '電郵';
-            document.getElementById('labelSchoolEdit').textContent = isEnglish ? 'School (Chinese)' : '學校（中文）';
-            document.getElementById('labelSchoolEnEdit').textContent = isEnglish ? 'School (English)' : '學校（英文）';
-            document.getElementById('labelPositionEdit').textContent = isEnglish ? 'Position (Chinese)' : '職位（中文）';
-            document.getElementById('labelPositionEnEdit').textContent = isEnglish ? 'Position (English)' : '職位（英文）';
-            document.getElementById('labelWebsiteEdit').textContent = isEnglish ? 'Website (optional)' : '網站（可選）';
-            document.getElementById('btnSave').textContent = isEnglish ? 'Save' : '儲存';
-            document.getElementById('btnCancel').textContent = isEnglish ? 'Cancel' : '取消';
-            document.getElementById('btnEditView').textContent = isEnglish ? 'Edit' : '編輯資料';
-        }
-
-        // Cancel Edit
-        function cancelEdit() {
-            document.getElementById('viewMode').classList.remove('hidden');
-            document.getElementById('editMode').classList.remove('active');
-        }
-
-        // Save Contact
-        function saveContact() {
-            contacts.name = document.getElementById('inputName').value;
-            contacts.nameEn = document.getElementById('inputNameEn').value;
-            contacts.phone = document.getElementById('inputPhone').value;
-            contacts.email = document.getElementById('inputEmail').value;
-            contacts.school = document.getElementById('inputSchool').value;
-            contacts.schoolEn = document.getElementById('inputSchoolEn').value;
-            contacts.position = document.getElementById('inputPosition').value;
-            contacts.positionEn = document.getElementById('inputPositionEn').value;
-            contacts.website = document.getElementById('inputWebsite').value;
-            
-            saveData();
-            updateUI();
-            cancelEdit();
-            
-            showToast(isEnglish ? 'Saved!' : '已儲存！');
-        }
-
-        // Toast
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            updateUI();
+        // ─── Event delegation ─────────────────────────────────────────────
+        document.addEventListener('click', (e) => {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+            const action = actions[target.dataset.action];
+            if (action) action();
         });
 
-        // Register Service Worker for PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => {});
-        }
+        // ─── Bootstrap ────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            storage.load();
+            render();
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            }
+        });
+    })();
     </script>
 </body>
 </html>
