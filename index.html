@@ -183,6 +183,23 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 16px rgba(0, 255, 136, 0.4);
         }
+        a.btn {
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        a.btn-homepage {
+            background: linear-gradient(135deg, #00B4D8 0%, #0077B6 100%);
+            color: #fff;
+            border: 1px solid rgba(0, 180, 216, 0.6);
+        }
+        a.btn-homepage:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 180, 216, 0.5);
+        }
 
         .lang-toggle {
             position: absolute;
@@ -325,6 +342,7 @@
                 <button class="btn btn-secondary" data-action="play-sound">🔊</button>
                 <button class="btn btn-secondary" data-action="switch-card"  data-i18n="btnSwitch"></button>
                 <button class="btn btn-secondary" data-action="show-edit"    data-i18n="btnEditView"></button>
+                <a class="btn btn-secondary btn-homepage" href="https://ihateusingai-beep.github.io/KenCheng-homepage/" target="_blank" rel="noopener noreferrer" data-i18n="btnHomepage"></a>
             </div>
         </div>
 
@@ -419,7 +437,7 @@
                 labelPhone: '電話', labelEmail: '電郵',
                 labelSchool: '學校', labelPosition: '職位',
                 qrTitle: '掃描添加聯絡人', qrLabel: '二維碼',
-                btnDownload: '下載聯絡人', btnSwitch: '切換', btnEditView: '編輯資料',
+                btnDownload: '下載聯絡人', btnSwitch: '切換', btnEditView: '編輯資料', btnHomepage: '🏠 個人主頁',
                 editTitle: '編輯名片', editSubtitle: '更新您的聯絡資料',
                 labelName: '姓名（中文）', labelNameEn: '姓名（英文）',
                 labelPhoneEdit: '電話', labelEmailEdit: '電郵',
@@ -438,7 +456,7 @@
                 labelPhone: 'Phone', labelEmail: 'Email',
                 labelSchool: 'School', labelPosition: 'Position',
                 qrTitle: 'Scan to Add Contact', qrLabel: 'QR Code',
-                btnDownload: 'Download Contact', btnSwitch: 'Switch', btnEditView: 'Edit',
+                btnDownload: 'Download Contact', btnSwitch: 'Switch', btnEditView: 'Edit', btnHomepage: '🏠 Homepage',
                 editTitle: 'Edit Contact', editSubtitle: 'Update your contact info',
                 labelName: 'Name (Chinese)', labelNameEn: 'Name (English)',
                 labelPhoneEdit: 'Phone', labelEmailEdit: 'Email',
