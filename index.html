@@ -8,7 +8,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>個人名片 | Personal Card</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+HK:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -134,6 +136,28 @@
         }
 
         .qr-error { color: #c0392b; font-size: 14px; }
+
+        .install-btn {
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0A0A0F;
+            border: 2px solid #FFD700;
+            animation: installPulse 2s ease-in-out infinite;
+        }
+        .install-btn.show { display: block; }
+        .install-btn.installed {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent);
+            border-color: var(--accent);
+            animation: none;
+            cursor: default;
+        }
+        @keyframes installPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.6); }
+            50%      { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+        }
 
         .btn-group {
             display: flex;
@@ -294,6 +318,8 @@
                 <div class="qr-label" data-i18n="qrLabel"></div>
             </div>
 
+            <button class="btn install-btn" data-action="install-pwa" data-i18n="btnInstall" hidden></button>
+
             <div class="btn-group">
                 <button class="btn btn-secondary" data-action="download-vcard" data-i18n="btnDownload"></button>
                 <button class="btn btn-secondary" data-action="play-sound">🔊</button>
@@ -403,6 +429,8 @@
                 btnSave: '儲存', btnCancel: '取消',
                 toastSaved: '已儲存！', toastDownloaded: '已下載！',
                 toastSwitched: '已切換至', toastActivated: 'Psycho-Frame 共鳴！',
+                toastInstalled: '已安裝！', toastInstallFailed: '安裝失敗，請稍後再試',
+                btnInstall: '📲 安裝 App', btnInstalled: '✓ 已安裝',
                 switchToSchool: '學校', switchToPersonal: '個人',
             },
             en: {
@@ -420,6 +448,8 @@
                 btnSave: 'Save', btnCancel: 'Cancel',
                 toastSaved: 'Saved!', toastDownloaded: 'Downloaded!',
                 toastSwitched: 'Switched to ', toastActivated: 'NT-D ACTIVATED!',
+                toastInstalled: 'Installed!', toastInstallFailed: 'Install failed, try again later',
+                btnInstall: '📲 Install App', btnInstalled: '✓ Installed',
                 switchToSchool: 'School', switchToPersonal: 'Personal',
             },
         };
@@ -523,6 +553,7 @@
                 toast(t('toastDownloaded'));
             },
             'play-sound': () => playGundamSound(),
+            'install-pwa': () => installPWA(),
         };
 
         // ─── Audio: Gundam NT-D activation ────────────────────────────────
@@ -605,6 +636,7 @@
             });
 
             renderQR();
+            refreshInstallButton();
         };
 
         const populateEditForm = () => {
@@ -622,9 +654,74 @@
             if (action) action();
         });
 
+        // ─── PWA install ─────────────────────────────────────────────────
+        let deferredInstallPrompt = null;
+        let isInstalled = false;
+
+        const refreshInstallButton = () => {
+            const btn = document.querySelector('[data-action="install-pwa"]');
+            if (!btn) return;
+            if (isInstalled) {
+                btn.classList.add('installed', 'show');
+                btn.hidden = false;
+                btn.disabled = true;
+                btn.textContent = t('btnInstalled');
+            } else if (deferredInstallPrompt) {
+                btn.classList.add('show');
+                btn.classList.remove('installed');
+                btn.hidden = false;
+                btn.disabled = false;
+                btn.textContent = t('btnInstall');
+            } else {
+                btn.classList.remove('show', 'installed');
+                btn.hidden = true;
+            }
+        };
+
+        const installPWA = async () => {
+            if (isInstalled) return;
+            if (!deferredInstallPrompt) {
+                // iOS / unsupported: give instruction
+                const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isiOS) {
+                    toast(state.lang === 'en'
+                        ? 'Tap Share → Add to Home Screen'
+                        : '點一下分享 → 加到主畫面');
+                } else {
+                    toast(t('toastInstallFailed'));
+                }
+                return;
+            }
+            deferredInstallPrompt.prompt();
+            const choice = await deferredInstallPrompt.userChoice;
+            deferredInstallPrompt = null;
+            if (choice && choice.outcome === 'accepted') {
+                isInstalled = true;
+                toast(t('toastInstalled'));
+                refreshInstallButton();
+            } else {
+                refreshInstallButton();
+            }
+        };
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            refreshInstallButton();
+        });
+
+        window.addEventListener('appinstalled', () => {
+            isInstalled = true;
+            deferredInstallPrompt = null;
+            refreshInstallButton();
+        });
+
         // ─── Bootstrap ────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
             storage.load();
+            // Detect already-installed (standalone display mode)
+            isInstalled = window.matchMedia('(display-mode: standalone)').matches
+                       || window.navigator.standalone === true;
             render();
 
             if ('serviceWorker' in navigator) {

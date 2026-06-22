@@ -1,8 +1,13 @@
-const CACHE_NAME = 'business-card-v2';
+const CACHE_NAME = 'business-card-v3';
 const ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/icon-maskable-512.png',
+  '/apple-touch-icon.png',
+  '/intro.jpg',
   'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
   'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+HK:wght@400;500;700&display=swap',
 ];
